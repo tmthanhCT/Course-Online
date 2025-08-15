@@ -6,9 +6,17 @@ include 'admin_header.php';
 if (isset($_POST['add'])) {
     $name = $_POST['name'];
     $user_id = $_POST['user_id'];
-    $avt_img = $_POST['avt_img'];
     $bio = $_POST['bio'];
     $expertise = $_POST['expertise'];
+    $avt_img = '';
+    if (isset($_FILES['avt_img']) && $_FILES['avt_img']['error'] === UPLOAD_ERR_OK) {
+        $ext = pathinfo($_FILES['avt_img']['name'], PATHINFO_EXTENSION);
+        $filename = 'uploads/instructor_' . time() . '_' . rand(1000,9999) . '.' . $ext;
+        move_uploaded_file($_FILES['avt_img']['tmp_name'], '../' . $filename);
+        $avt_img = $filename;
+    } elseif (!empty($_POST['avt_img_url'])) {
+        $avt_img = $_POST['avt_img_url'];
+    }
     $stmt = $pdo->prepare("INSERT INTO instructors (name, user_id, avt_img, bio, expertise, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
     $stmt->execute([$name, $user_id, $avt_img, $bio, $expertise]);
     header("Location: InstructorControllers.php");
@@ -20,9 +28,23 @@ if (isset($_POST['edit'])) {
     $id = $_POST['id'];
     $name = $_POST['name'];
     $user_id = $_POST['user_id'];
-    $avt_img = $_POST['avt_img'];
     $bio = $_POST['bio'];
     $expertise = $_POST['expertise'];
+    $avt_img = '';
+    if (isset($_FILES['avt_img']) && $_FILES['avt_img']['error'] === UPLOAD_ERR_OK) {
+        $ext = pathinfo($_FILES['avt_img']['name'], PATHINFO_EXTENSION);
+        $filename = 'uploads/instructor_' . time() . '_' . rand(1000,9999) . '.' . $ext;
+        move_uploaded_file($_FILES['avt_img']['tmp_name'], '../' . $filename);
+        $avt_img = $filename;
+    } elseif (!empty($_POST['avt_img_url'])) {
+        $avt_img = $_POST['avt_img_url'];
+    } else {
+        // keep old image if not changed
+        $stmt = $pdo->prepare("SELECT avt_img FROM instructors WHERE id=?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        $avt_img = $row ? $row['avt_img'] : '';
+    }
     $stmt = $pdo->prepare("UPDATE instructors SET name=?, user_id=?, avt_img=?, bio=?, expertise=? WHERE id=?");
     $stmt->execute([$name, $user_id, $avt_img, $bio, $expertise, $id]);
     header("Location: InstructorControllers.php");
@@ -55,18 +77,24 @@ if (isset($_GET['edit'])) {
     <h2 class="text-primary text-center mb-4"><i class="fas fa-chalkboard-teacher"></i> Instructor Management</h2>
     <!-- Add/Edit Form -->
     <div class="form-section mb-4 p-4 bg-white rounded shadow">
-        <form method="post" class="form-inline justify-content-center flex-wrap needs-validation" novalidate>
+        <form method="post" enctype="multipart/form-data"
+            class="form-inline justify-content-center flex-wrap needs-validation" novalidate>
             <input type="hidden" name="id" value="<?= $editInstructor['id'] ?? '' ?>">
             <input type="text" class="form-control mb-2 mr-sm-2" name="name" placeholder="Instructor Name" required
                 value="<?= $editInstructor['name'] ?? '' ?>">
             <input type="number" class="form-control mb-2 mr-sm-2" name="user_id" placeholder="User ID" min="1"
                 value="<?= $editInstructor['user_id'] ?? '' ?>">
-            <input type="text" class="form-control mb-2 mr-sm-2" name="avt_img" placeholder="Avatar Image URL"
+            <input type="file" class="form-control-file mb-2 mr-sm-2" name="avt_img" accept="image/*">
+            <input type="text" class="form-control mb-2 mr-sm-2" name="avt_img_url" placeholder="Or paste image URL"
                 value="<?= $editInstructor['avt_img'] ?? '' ?>">
             <input type="text" class="form-control mb-2 mr-sm-2" name="bio" placeholder="Bio"
                 value="<?= $editInstructor['bio'] ?? '' ?>">
             <input type="text" class="form-control mb-2 mr-sm-2" name="expertise" placeholder="Expertise"
                 value="<?= $editInstructor['expertise'] ?? '' ?>">
+            <?php if ($editInstructor && !empty($editInstructor['avt_img'])): ?>
+            <img src="<?= strpos($editInstructor['avt_img'], 'http') === 0 ? '' : '../' ?><?= htmlspecialchars($editInstructor['avt_img']) ?>"
+                class="avt-img-preview mb-2" alt="Current Avatar" style="max-height:60px;max-width:60px;">
+            <?php endif; ?>
             <?php if ($editInstructor): ?>
             <button type="submit" class="btn btn-success mb-2" name="edit"><i class="fas fa-save"></i> Update</button>
             <a href="InstructorControllers.php" class="btn btn-secondary mb-2"><i class="fas fa-times"></i> Cancel</a>
@@ -98,7 +126,8 @@ if (isset($_GET['edit'])) {
                     <td><?= htmlspecialchars($ins['user_id']) ?></td>
                     <td>
                         <?php if (!empty($ins['avt_img'])): ?>
-                        <img src="<?= htmlspecialchars($ins['avt_img']) ?>" class="avt-img-preview" alt="avt">
+                        <img src="<?= strpos($ins['avt_img'], 'http') === 0 ? '' : '../' ?><?= htmlspecialchars($ins['avt_img']) ?>"
+                            class="avt-img-preview" alt="avt" style="max-height:40px;max-width:40px;">
                         <?php endif; ?>
                     </td>
                     <td><?= htmlspecialchars($ins['bio']) ?></td>
