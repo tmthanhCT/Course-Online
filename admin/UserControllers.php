@@ -32,10 +32,23 @@ $users = $stmt->fetchAll();
                             <td><?= $user['id'] ?></td>
                             <td><?= htmlspecialchars($user['name']) ?></td>
                             <td><?= htmlspecialchars($user['email']) ?></td>
-                            <td><?= htmlspecialchars($user['role'] ?? 'user') ?></td>
+                            <td>
+                                <form method="post" class="d-inline">
+                                    <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                                    <select name="role" class="form-control form-control-sm d-inline w-auto">
+                                        <option value="student" <?= $user['role']==='student'?'selected':'' ?>>student
+                                        </option>
+                                        <option value="instructor" <?= $user['role']==='instructor'?'selected':'' ?>>
+                                            instructor</option>
+                                        <option value="admin" <?= $user['role']==='admin'?'selected':'' ?>>admin
+                                        </option>
+                                    </select>
+                                    <button type="submit" name="update_role"
+                                        class="btn btn-sm btn-primary">Save</button>
+                                </form>
+                            </td>
                             <td><?= htmlspecialchars($user['created_at'] ?? '') ?></td>
                             <td>
-                                <a href="#" class="btn btn-info btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                 <a href="#" class="btn btn-danger btn-sm" title="Delete"
                                     onclick="return confirm('Delete this user?')"><i class="fas fa-trash-alt"></i></a>
                             </td>

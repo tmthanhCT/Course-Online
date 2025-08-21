@@ -41,6 +41,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<?php if (isset($error)) : ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Login Failed',
+    text: '<?php echo $error; ?>',
+    confirmButtonText: 'Try Again'
+});
+</script>
+<?php endif; ?>
+
 <!--end top header-->
 
 <!--start page content-->

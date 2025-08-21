@@ -1,5 +1,4 @@
 <?php
-include 'admin_header.php';
 require_once '../config/database.php';
 
 // Handle add course
@@ -29,7 +28,7 @@ if (isset($_POST['edit'])) {
     $url_id = isset($_POST['url_id']) && $_POST['url_id'] !== '' ? $_POST['url_id'] : null;
     $stmt = $pdo->prepare("UPDATE courses SET title=?, instructor_id=?, category_id=?, description=?, price=?, duration=?, url_id=? WHERE id=?");
     $stmt->execute([$title, $instructor_id, $category_id, $description, $price, $duration, $url_id, $id]);
-    header("Location: CourseControllers.php");
+    header("Location: CourseControllers.php?status=updated");
     exit;
 }
 
@@ -38,9 +37,11 @@ if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $stmt = $pdo->prepare("DELETE FROM courses WHERE id=?");
     $stmt->execute([$id]);
-    header("Location: CourseControllers.php");
+    header("Location: CourseControllers.php?status=deleted");
     exit;
 }
+
+include 'admin_header.php';
 
 // Get all courses with instructor and category name, and media url if any
 $stmt = $pdo->query("SELECT courses.*, instructors.name AS instructor_name, category.name AS category_name, videos_images_url.url AS media_url

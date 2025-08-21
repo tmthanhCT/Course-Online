@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
                                         <td><?php echo date('d/m/Y H:i', strtotime($ec['enrolled_at'])); ?></td>
                                         <td>$<?php echo htmlspecialchars($ec['price']); ?></td>
                                         <td><a href="course-details.php?id=<?php echo $ec['course_id']; ?>"
-                                                class="btn btn-sm btn-primary">Xem</a></td>
+                                                class="btn btn-sm btn-primary">View</a></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>

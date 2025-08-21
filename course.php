@@ -12,20 +12,6 @@ $courses = $stmt->fetchAll();
 
 ?>
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_2.jpg');">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row no-gutters slider-text align-items-end justify-content-center">
-            <div class="col-md-9 ftco-animate pb-5 text-center">
-                <p class="breadcrumbs"><span class="mr-2"><a href="index.php">Home<i
-                                class="fa fa-chevron-right"></i></a></span> <span>List of Courses<i
-                            class="fa fa-chevron-right"></i></span></p>
-                <h1 class="mb-0 bread">List of Courses</h1>
-            </div>
-        </div>
-    </div>
-</section>
-
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-3 sidebar">
