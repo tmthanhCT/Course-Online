@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
                                         </tr>
                                         <tr>
                                             <td><strong>Phone</strong></td>
-                                            <td><?php echo $user['Phone'] ? htmlspecialchars($user['Phone']) : '<span class="text-muted">Chưa cập nhật</span>'; ?>
+                                            <td><?php echo $user['Phone'] ? htmlspecialchars($user['Phone']) : '<span class="text-muted">Not updated yet</span>'; ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
                                         </tr>
                                         <tr>
                                             <td><strong>Birth Day</strong></td>
-                                            <td><?php echo $user['Birth_Day'] ? date('d/m/Y', strtotime($user['Birth_Day'])) : '<span class="text-muted">Chưa cập nhật</span>'; ?>
+                                            <td><?php echo $user['Birth_Day'] ? date('d/m/Y', strtotime($user['Birth_Day'])) : '<span class="text-muted">Not updated yet</span>'; ?>
                                             </td>
                                         </tr>
                                         <tr>
